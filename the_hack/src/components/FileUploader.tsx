@@ -19,8 +19,8 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
   };
 
   const beforeUpload = (file: FileType) => {
-    const isPdf = true;
-    console.log(file);
+    const MAX_SIZE_IN_MB = 6;
+    const isPdf = file.type === "application/pdf";
 
     const isDuplicate = fileList.some((fileInList: FileType) => {
       return fileAttributes(fileInList) == fileAttributes(file);
@@ -33,13 +33,13 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
     if (!isPdf) {
       return Upload.LIST_IGNORE;
     }
-    const isLt6M = file.size / 1024 / 1024 < 6;
-    if (!isLt6M) {
-      message.error('Items must smaller than 6MB!');
+    const isSmall = file.size / 1024 / 1024 < MAX_SIZE_IN_MB;
+    if (!isSmall) {
+      message.error(`Items must smaller than ${MAX_SIZE_IN_MB}MB!`);
       return Upload.LIST_IGNORE;
     }
 
-    return isPdf && isLt6M && !isDuplicate;
+    return isPdf && isSmall && !isDuplicate;
   };
 
   const handleChange: UploadProps['onChange'] = info => {
