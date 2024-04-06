@@ -1,99 +1,62 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-import { Button } from "@chakra-ui/react";
+"use client";
+import FileUpload from "@/components/FileUploader";
+import { useEffect, useState } from "react";
+import '@fontsource-variable/urbanist';
+import { GetProp, UploadProps } from "antd";
+import { Text, Box, Button, VStack, Container, SimpleGrid } from "@chakra-ui/react";
+import { Flex } from '@chakra-ui/react'
+import { FileCard } from "@/components/FileCard";
 
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 export default function Home() {
+  const [fileList, setFileList] = useState([]);
+
+  //DEBUG PRINT STATEMENTS, TO BE REMOVED LATER
+  useEffect(() => {
+    console.log(fileList);
+  }, [fileList]);
+
+
+  //end of debug print statements
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <Button>
-            LEBRON JAMES
-          </Button>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
+    <Container>
+      <Box
+        width="100vw"
+        height="100%"
+        overflow="scroll"
+      >
+        <VStack
+        width="100%"
+        alignItems="center"
+        spacing={3}
+        mt={20}
+      >
+        <FileUpload fileList={fileList} setFileList={setFileList}></FileUpload>
+        <VStack
+          spacing={0}
         >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+          {fileList.map((file: FileType, index: number) => (
+            <Text key={index}>
+              {file.name}
+            </Text>
+          ))}
+        </VStack>
+        
+      </VStack>
+        
+      </Box>
+      <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
+        
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+      </SimpleGrid>
+    </Container>
+    
   );
 }

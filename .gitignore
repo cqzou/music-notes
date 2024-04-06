@@ -1,3 +1,5 @@
 .env
 node_modules/
 suno-api/backend_venv/
+/env
+/wildhacks2024
