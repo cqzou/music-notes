@@ -1,10 +1,24 @@
 from typing import Annotated, Optional
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.middleware.cors import CORSMiddleware
 import os, io
 import PyPDF2
 
 app = FastAPI()
+# Configure CORS (Cross-Origin Resource Sharing)
+origins = [
+    "http://localhost:3000",  # Update with your frontend URL
+    # Add more origins as needed
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],  # Update with allowed HTTP methods
+    allow_headers=["*"],  # You can specify allowed headers explicitly if needed
+)
 
 def extract_text_from_pdf(pdf_bytes: bytes) -> str:
     """
