@@ -10,6 +10,7 @@ import schemas
 import io
 from deps import get_token
 from utils import generate_lyrics, generate_music, get_feed, get_lyrics
+from topic_segment import TopicSegmenter
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
@@ -131,12 +132,15 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
 async def create_upload_files(file: UploadFile):
     pdf_bytes = await file.read()  # Read file as binary data
     text = extract_text_from_pdf(pdf_bytes)  # Extract text from PDF
-    print(text)  # Print the extracted text
-    return {"text": text}
+    print(text)
+    segmenter = TopicSegmenter()
+    data = segmenter.segment_topic(text)
+    print(data)
+    return {"data": data}
 
 # Get user data
 @app.get("/getallprojects/{userid}")
-async def fetch_feed(userid: str):
+async def fetch_user_feed(userid: str):
     try:
         collection = client['thelasthackbackend']['users']
         result = collection.find_one({'userid':userid}, {'_id': 0})
