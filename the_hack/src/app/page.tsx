@@ -6,11 +6,13 @@ import { GetProp, UploadProps } from "antd";
 import { Text, Box, Button, VStack, Container, SimpleGrid } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react'
 import { FileCard } from "@/components/FileCard";
+import { exampleProjects, Project } from "@/components/consts";
 
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 export default function Home() {
   const [fileList, setFileList] = useState([]);
+  const [projectList, setProjectList] = useState<Project[]>(exampleProjects);
 
   //DEBUG PRINT STATEMENTS, TO BE REMOVED LATER
   useEffect(() => {
@@ -48,13 +50,11 @@ export default function Home() {
         
       </Box>
       <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
-        
-        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
-        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
-        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
-        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
-        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
-        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        {
+          projectList.map((project: Project, index: number) => (
+            <FileCard key={index} project={project}></FileCard>
+          ))
+        }
       </SimpleGrid>
     </Container>
     
