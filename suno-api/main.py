@@ -10,6 +10,24 @@ import schemas
 import io
 from deps import get_token
 from utils import generate_lyrics, generate_music, get_feed, get_lyrics
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+from dotenv import load_dotenv
+import os
+import certifi
+
+load_dotenv()
+
+# Create a new client and connect to the server
+print(os.getenv('MONGO_URI'))
+client = MongoClient(os.getenv('MONGO_URI'), server_api=ServerApi('1'), tlsCAFile=certifi.where())
+
+# Send a ping to confirm a successful connection
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
 
 app = FastAPI()
 
@@ -115,3 +133,17 @@ async def create_upload_files(file: UploadFile):
     text = extract_text_from_pdf(pdf_bytes)  # Extract text from PDF
     print(text)  # Print the extracted text
     return {"text": text}
+
+# Get user data
+@app.get("/getallprojects/{userid}")
+async def fetch_feed(userid: str):
+    try:
+        collection = client['thelasthackbackend']['users']
+        result = collection.find_one({'userid':userid}, {'_id': 0})
+        print('result is', type(result))
+        
+        return result
+    except Exception as e:
+        raise HTTPException(
+            detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
