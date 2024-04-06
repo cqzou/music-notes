@@ -1,7 +1,8 @@
 "use client";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "@/utils/theme";
-import "./custom-font.css";
+import "./globals.css"
+import '@fontsource-variable/urbanist';
 
 export default function RootLayout({
   children,

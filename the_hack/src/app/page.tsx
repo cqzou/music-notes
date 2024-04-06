@@ -2,6 +2,7 @@
 import FileUpload from "@/components/FileUploader";
 import { Text, Box, Button, VStack } from "@chakra-ui/react";
 import { useState } from "react";
+import '@fontsource-variable/urbanist';
 
 
 export default function Home() {
@@ -18,6 +19,7 @@ export default function Home() {
         justifyContent="center"
         mt={20}
       >
+        <Button colorScheme="primary" />
         <FileUpload fileList={fileList} setFileList={setFileList}></FileUpload>
       </VStack>
       

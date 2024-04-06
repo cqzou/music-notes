@@ -3,6 +3,7 @@ import React from 'react';
 import { Box, Button, Text } from '@chakra-ui/react';
 import { Upload, message } from 'antd';
 import type { GetProp, UploadProps } from 'antd';
+import '@fontsource-variable/urbanist';
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 
@@ -53,9 +54,7 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
           +
         </Box>
         <Box fontFamily="Urbanist" width="100%">
-            <Text>
-                Upload
-            </Text>
+            Upload
         </Box>
       </Button>
     </Box>

@@ -1,6 +1,8 @@
 import { defineStyleConfig, extendTheme } from '@chakra-ui/react';
 import type { StyleFunctionProps } from '@chakra-ui/styled-system';
 import { mode } from '@chakra-ui/theme-tools';
+import '@fontsource-variable/urbanist';
+
 
 const textBlackColor = '#303030';
 const textWhiteColor = '#dadada';
@@ -72,11 +74,11 @@ const theme = extendTheme({
   styles: {
     global: (props: StyleFunctionProps) => ({
       html: {
-        fontFamily: `'Urbanist' !important`,
+        fontFamily: 'Urbanist',
       },
       body: {
         bg: mode('#fff', '#001121')(props),
-        fontFamily: `'Urbanist' !important`,
+        fontFamily: 'Urbanist',
       },
       h1: {
         fontSize: '48px',
