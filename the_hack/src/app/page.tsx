@@ -21,7 +21,7 @@ export default function Home() {
   //end of debug print statements
 
   return (
-    <Container>
+    <Container maxW="100%">
       <Box
         width="100vw"
         height="100%"
