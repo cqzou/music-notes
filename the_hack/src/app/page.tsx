@@ -1,9 +1,11 @@
 "use client";
 import FileUpload from "@/components/FileUploader";
-import { Text, Box, Button, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
+import { Text, Box, Button, VStack, Container, SimpleGrid } from "@chakra-ui/react";
+import { Flex } from '@chakra-ui/react'
+import { FileCard } from "@/components/FileCard";
 
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -19,12 +21,13 @@ export default function Home() {
   //end of debug print statements
 
   return (
-    <Box
-      width="100vw"
-      height="100vh"
-      overflow="scroll"
-    >
-      <VStack
+    <Container>
+      <Box
+        width="100vw"
+        height="100%"
+        overflow="scroll"
+      >
+        <VStack
         width="100%"
         alignItems="center"
         spacing={3}
@@ -42,7 +45,18 @@ export default function Home() {
         </VStack>
         
       </VStack>
-      
-    </Box>
+        
+      </Box>
+      <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
+        
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+        <FileCard processingStatus='completed' thumbnail='https://hips.hearstapps.com/hmg-prod/images/dog-puppy-on-garden-royalty-free-image-1586966191.jpg?crop=1xw:0.74975xh;center,top&resize=1200:*' />
+      </SimpleGrid>
+    </Container>
+    
   );
 }
