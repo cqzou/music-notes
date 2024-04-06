@@ -39,7 +39,7 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
       return Upload.LIST_IGNORE;
     }
 
-    return isPdf && isSmall && !isDuplicate;
+    return true;
   };
 
   const handleChange: UploadProps['onChange'] = info => {
@@ -78,8 +78,8 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
             }}
             fileList={fileList}
             beforeUpload={beforeUpload}
-            action={``}
             onChange={handleChange}
+            action={'http://127.0.0.1:8000/uploadfiles/'}
           >
             {uploadButton}
           </Upload>
