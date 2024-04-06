@@ -2,10 +2,12 @@
 
 import json
 
-from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.responses import HTMLResponse
+import PyPDF2
 import schemas
+import io
 from deps import get_token
 from utils import generate_lyrics, generate_music, get_feed, get_lyrics
 
@@ -90,3 +92,26 @@ async def fetch_lyrics(lid: str, token: str = Depends(get_token)):
         raise HTTPException(
             detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+#####################################
+#Uploading Files 
+#Extracts text from a PDF 
+def extract_text_from_pdf(pdf_bytes: bytes) -> str:
+    """
+    Extract text from a PDF binary data.
+    """
+    pdf_file = io.BytesIO(pdf_bytes)
+    reader = PyPDF2.PdfReader(pdf_file)
+    text = ""
+    for page_number in range(len(reader.pages)):
+        page = reader.pages[page_number]
+        text += page.extract_text()
+    return text
+
+#Read bytes from fileUpload, parse them and return text string 
+@app.post("/uploadfiles/")
+async def create_upload_files(file: UploadFile):
+    pdf_bytes = await file.read()  # Read file as binary data
+    text = extract_text_from_pdf(pdf_bytes)  # Extract text from PDF
+    print(text)  # Print the extracted text
+    return {"text": text}

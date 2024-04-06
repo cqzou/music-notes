@@ -78,3 +78,4 @@ def save_song(aid, output_path="output"):
             # If the chunk is not empty, write it to the file.
             if chunk:
                 output_file.write(chunk)
+test_generate_music()
