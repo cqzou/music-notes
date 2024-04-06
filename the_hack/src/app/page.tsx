@@ -3,14 +3,16 @@ import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
-import { Text, Box, Button, VStack, Container, SimpleGrid } from "@chakra-ui/react";
+import { Text, Box, Button, VStack, Container, SimpleGrid, useDisclosure } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react'
 import { FileCard } from "@/components/FileCard";
 import { exampleProjects, Project } from "@/components/consts";
+import { FileModal } from "@/components/FileModal";
 
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 export default function Home() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [fileList, setFileList] = useState([]);
   const [projectList, setProjectList] = useState<Project[]>(exampleProjects);
 
@@ -52,10 +54,11 @@ export default function Home() {
       <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
         {
           projectList.map((project: Project, index: number) => (
-            <FileCard key={index} project={project}></FileCard>
+            <FileCard key={index} project={project} onClick={onOpen}></FileCard>
           ))
         }
       </SimpleGrid>
+      <FileModal fileMetadata={'hi'} onClose={onClose} isOpen={isOpen}></FileModal>
     </Container>
     
   );

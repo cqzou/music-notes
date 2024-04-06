@@ -16,12 +16,13 @@ import { DeleteIcon } from '@chakra-ui/icons';
 import { Project } from "./consts";
 
 interface FileCardProps {
-  project: Project
+  project: Project,
+  onClick: any,
 }
 
-export const FileCard = ({ project }: FileCardProps) => {
+export const FileCard = ({ project, onClick }: FileCardProps) => {
   return (
-    <Card maxW="md">
+    <Card maxW="md" onClick={onClick}>
       <CardHeader>
         <Heading size='md'>Econ 101 lecture 1</Heading>
       </CardHeader>
