@@ -1,3 +1,4 @@
 .env
 /env
 /wildhacks2024
+node_modules/
