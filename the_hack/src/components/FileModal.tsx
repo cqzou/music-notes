@@ -91,6 +91,30 @@ export const FileModal = ({ project, onClose, isOpen, setUserData }: FileModalPr
     }
   }
 
+  const deleteProject = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`http://127.0.0.1:8000/delete_project/${uid}/${project?.projectid}`);
+      console.log(response); 
+      if (response?.data?.data) {
+        setUserData((prevUserData: UserData | undefined) => {
+          if (prevUserData) {
+            let newUserData: UserData | undefined = {...prevUserData};
+            console.log(newUserData);
+            newUserData.projects = response.data.data;
+            console.log(newUserData);
+            return newUserData;
+          }
+        });
+        onClose();
+      }
+      setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false)
+    }
+  }
+
 
 
   return (
@@ -101,9 +125,14 @@ export const FileModal = ({ project, onClose, isOpen, setUserData }: FileModalPr
           <ModalHeader>
             <HStack justifyContent="space-between">
             <Text>{project?.projectname}</Text>
-            <Button onClick={updateThing} disabled={isLoading} mr={"10%"}>
-              Refresh
-            </Button>
+            <HStack mr={"10%"}>
+              <Button onClick={updateThing} disabled={isLoading}>
+                Refresh
+              </Button>
+              <Button onClick={deleteProject} disabled={isLoading}>
+                Delete
+              </Button>
+              </HStack>
             </HStack>
           </ModalHeader>
           <ModalCloseButton />
