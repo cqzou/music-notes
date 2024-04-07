@@ -4,6 +4,8 @@ import time
 
 import aiohttp
 from dotenv import load_dotenv
+import requests
+from requests import get as rget
 
 load_dotenv()
 
@@ -16,6 +18,37 @@ COMMON_HEADERS = {
     "Origin": "https://app.suno.ai",
 }
 
+def get_info(aid):
+    response = requests.get(f"http://127.0.0.1:8000/feed/{aid}")
+
+    data = json.loads(response.text)[0]
+
+    return data["audio_url"], data["metadata"]
+
+async def generate_music_from_text(text: str, theme: str, title: str, token: str) -> str:
+
+    data = {
+        "prompt": text,
+        "mv": "chirp-v3-0",
+        "title": title,
+        "tags": theme,
+    }
+    print(data)
+    print(token)
+    r = await generate_music(data, token)
+    print(f"r: {r}")
+   
+    json_resp = r
+    aid1 = None
+    aid2 = None
+    clips = json_resp.get("clips", [])
+    if clips:
+        aid1 = clips[0].get("id", "")
+        aid2 = clips[1].get("id", "")
+    else:
+        aid1 = ""
+        aid2 = ""
+    return aid1, aid2
 
 async def fetch(url, headers=None, data=None, method="POST"):
     if headers is None:
@@ -35,6 +68,20 @@ async def fetch(url, headers=None, data=None, method="POST"):
         except Exception as e:
             return f"An error occurred: {e}"
 
+async def save_song(aid, token):
+    print("dobo")
+    start_time = time.time()
+    while True:
+        response = await get_feed(aid, token)
+        print(f"response: {response}")
+        if response[0]["audio_url"] != "":
+            break
+        elif time.time() - start_time > 120:
+            raise TimeoutError("Failed to get audio_url within 120 seconds")
+        time.sleep(30)
+    #print(f"final audio_url: {audio_url}")
+    #print(f"final metadata: {metadata}")
+    return response[0]["audio_url"], response[0]["metadata"]
 
 async def get_feed(ids, token):
     headers = {"Authorization": f"Bearer {token}"}

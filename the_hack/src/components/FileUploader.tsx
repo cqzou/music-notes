@@ -43,7 +43,7 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
   };
 
   const handleChange: UploadProps['onChange'] = info => {
-    //console.log(info);
+    console.log(info);
     setFileList(info.fileList.slice());
   };
 
@@ -72,14 +72,11 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
         >
           <Upload
             name="file"
-            showUploadList={{
-              showDownloadIcon: false,
-              showRemoveIcon: true,
-            }}
+            showUploadList={false}
             fileList={fileList}
             beforeUpload={beforeUpload}
             onChange={handleChange}
-            action={'http://127.0.0.1:8000/uploadfiles/'}
+            maxCount={1}
           >
             {uploadButton}
           </Upload>
