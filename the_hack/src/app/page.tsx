@@ -159,7 +159,7 @@ export default function Home() {
         </VStack>
         
       </Box>
-      <SimpleGrid minChildWidth='250px' spacing='40px' m='10px'>
+      <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
         {
           userData?.projects.map((project: Project, index: number) => (
             <FileCard key={index} project={project} onClick={ () => {
