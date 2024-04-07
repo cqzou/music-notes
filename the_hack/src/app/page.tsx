@@ -9,6 +9,7 @@ import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
 import { FileModal } from "@/components/FileModal";
 import { MongoClient, ServerApiVersion } from "mongodb";
+import axios from "axios";
 
 
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
@@ -17,6 +18,12 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [fileList, setFileList] = useState<any>([]);
   const [userData, setUserData] = useState<UserData>();
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+
+  }, [userData])
   // const client = new MongoClient(process.env.MONGO_URI as string);
   // async function run() {
   //   try {
@@ -39,14 +46,29 @@ export default function Home() {
   // });
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/getallprojects/${userid}`)
-      .then(response => response.json())
-      .then(json => {
-        setUserData(json);
-        // console.log('fetching', `http://127.0.0.1:8000/getallprojects/${userid}`);
-        // console.log('userData', json);
-      });
-  }, []);
+    const fetchProjects = () => {
+      fetch(`http://127.0.0.1:8000/getallprojects/${userid}`)
+        .then(response => response.json())
+        .then(json => {
+          setUserData(json);
+        })
+        .catch(error => console.error('Error fetching projects:', error));
+    };
+  
+    // Immediately invoke the fetch operation when the component mounts
+    fetchProjects();
+    
+    // Set up the interval to repeat the fetch operation every 6 seconds
+    //const intervalId = setInterval(fetchProjects, 6000);
+  
+    // Clear the interval when the component is unmounted
+    //return () => clearInterval(intervalId);
+  }, [userid]); // Depend on userid to restart the interval if userid changes
+
+
+  useEffect(() => {
+    console.log(userData)
+  }, [userData]);
 
   //DEBUG PRINT STATEMENTS, TO BE REMOVED LATER
   // useEffect(() => {
@@ -59,6 +81,10 @@ export default function Home() {
     console.log(file.originFileObj);
     const formData = new FormData();
     formData.append('file', file.originFileObj);
+    formData.append('userid', 'fioenoe213384fh83833djdiu');
+    formData.append('description', 'this is a description...');
+    formData.append('theme', 'electronic bluegrass');
+    formData.append('projectname', 'this is my title');
     const uploadUrl = 'http://127.0.0.1:8000/uploadfiles/';
   
     try {
@@ -100,7 +126,6 @@ export default function Home() {
             <Text key={index}>
               {file.name}
             </Text>
-            { file.response?.audio_url && <audio controls={true} src={file.response.audio_url}></audio>}
             </>
           ))}
         </VStack>
@@ -111,11 +136,14 @@ export default function Home() {
       <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
         {
           userData?.projects.map((project: Project, index: number) => (
-            <FileCard key={index} project={project} onClick={onOpen}></FileCard>
+            <FileCard key={index} project={project} onClick={ () => {
+              setSelectedIndex(index)
+              onOpen();
+            }}></FileCard>
           ))
         }
       </SimpleGrid>
-      <FileModal fileMetadata={'hi'} onClose={onClose} isOpen={isOpen}></FileModal>
+      <FileModal project={userData?.projects[selectedIndex]} onClose={onClose} isOpen={isOpen}></FileModal>
     </Container>
     
   );

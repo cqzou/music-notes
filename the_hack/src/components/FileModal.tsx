@@ -13,16 +13,17 @@ import {
   AccordionIcon,
   AccordionPanel,
   Box,
+  Heading,
 } from "@chakra-ui/react";
 
 interface FileModalProps {
-  fileMetadata: any;
+  project: any;
   onClose: any;
   isOpen: boolean;
 }
 
 export const FileModal = ({
-  fileMetadata,
+  project,
   onClose,
   isOpen,
 }: FileModalProps) => {
@@ -32,44 +33,27 @@ export const FileModal = ({
         <ModalOverlay />
         <ModalContent  width="100rem">
           <ModalHeader>
-            Modal Title
+            {project?.projectname}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Accordion allowToggle>
-              <AccordionItem>
-                <h2>
+              { project?.topics.map((topic: any, index: number) => (
+                <AccordionItem>
                   <AccordionButton>
                     <Box as="span" flex='1' textAlign='left'>
-                      Section 1 title
+                      <Heading as="h4" size="md">
+                      {topic.topicname}
+                      </Heading>
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
-                </h2>
                 <AccordionPanel pb={4}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                  veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                  commodo consequat.
+                  {topic.lyrics}
+                  {topic.mp3 != "" && <audio controls src={`${topic.mp3}`} /> }
                 </AccordionPanel>
               </AccordionItem>
-
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box as="span" flex='1' textAlign='left'>
-                      Section 2 title
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                  veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                  commodo consequat.
-                </AccordionPanel>
-              </AccordionItem>
+              ))}
             </Accordion>
           </ModalBody>
           <ModalFooter>

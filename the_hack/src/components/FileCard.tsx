@@ -24,7 +24,7 @@ export const FileCard = ({ project, onClick }: FileCardProps) => {
   return (
     <Card maxW="md" onClick={onClick}>
       <CardHeader>
-        <Heading size='md'>Econ 101 lecture 1</Heading>
+        <Heading size='md'>{project?.projectname}</Heading>
       </CardHeader>
       <Image
         objectFit="cover"
@@ -33,7 +33,7 @@ export const FileCard = ({ project, onClick }: FileCardProps) => {
       />
       <CardBody>
         <Text>{project.description}</Text>
-        <Text fontSize='xs'>Created on {project.creation_date}</Text>
+        <Text fontSize='xs'>Created on {project.creationdate}</Text>
       </CardBody>
       <CardFooter
         justify="space-between"

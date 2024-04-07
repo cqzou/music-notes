@@ -40,3 +40,19 @@ class DescriptionModeGenerateParam(BaseModel):
         default="",
         description="Placeholder, keep it as an empty string, do not modify it",
     )
+class Topic(BaseModel):
+    topicname: str
+    lyrics: str
+    mp3: str
+    aid: Optional[str] = ""
+
+    
+class Project(BaseModel):
+    projectname: str
+    processingstatus: str
+    projectid: str
+    description: str
+    thumbnail: str
+    topics: list[dict]
+
+
