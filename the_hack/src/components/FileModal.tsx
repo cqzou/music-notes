@@ -17,18 +17,24 @@ import {
   Text, 
   Spacer,
   Heading,
+  HStack,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import axios from "axios";
+import { useEffect, useRef, useState } from "react";
+import { UserData } from "./consts";
 
 interface FileModalProps {
   project: any;
   onClose: any;
   isOpen: boolean;
+  setUserData: any;
 }
 
-export const FileModal = ({ project, onClose, isOpen }: FileModalProps) => {
+export const FileModal = ({ project, onClose, isOpen, setUserData }: FileModalProps) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [currentMp3, setCurrentMp3] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const uid = 'fioenoe213384fh83833djdiu'
 
   const handlePlayButtonClick = (mp3: string) => {
     setCurrentMp3(mp3);
@@ -38,12 +44,68 @@ export const FileModal = ({ project, onClose, isOpen }: FileModalProps) => {
     }
   };
 
+  useEffect(() => {
+    const updateThing = async () => {
+      try {
+          setIsLoading(true);
+          const response = await axios.get(`http://127.0.0.1:8000/update_project_audio/${uid}/${project?.projectid}`);
+          console.log(response);
+          setUserData((prevUserData: UserData | undefined) => {
+            if (prevUserData) {
+              let newUserData: UserData | undefined = {...prevUserData};
+              console.log(newUserData);
+              newUserData.projects = response.data.data;
+              console.log(newUserData);
+              return newUserData;
+            }
+          });
+          setIsLoading(false);
+      } catch (err) {
+        console.error(err);
+        setIsLoading(false);
+      }
+    }
+    if (!isLoading && project && project?.topics.some((topic: any) => topic?.status == "generating" || topic?.status == "streaming") && isOpen) {
+      updateThing();
+    }
+  }, [isOpen])
+
+  const updateThing = async () => {
+    try {
+        setIsLoading(true);
+        const response = await axios.get(`http://127.0.0.1:8000/update_project_audio/${uid}/${project?.projectid}`);
+        console.log(response);
+        setUserData((prevUserData: UserData | undefined) => {
+          if (prevUserData) {
+            let newUserData: UserData | undefined = {...prevUserData};
+            console.log(newUserData);
+            newUserData.projects = response.data.data;
+            console.log(newUserData);
+            return newUserData;
+          }
+        });
+        setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+    }
+  }
+
+
+
   return (
     <>
       <Modal onClose={onClose} size="full" isOpen={isOpen}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>{project?.projectname}</ModalHeader>
+          <ModalHeader>
+            <HStack justifyContent="space-between">
+            <Text>{project?.projectname}</Text>
+            <Button onClick={updateThing} disabled={isLoading} mr={"10%"}>
+              Refresh
+            </Button>
+            </HStack>
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Accordion allowToggle>

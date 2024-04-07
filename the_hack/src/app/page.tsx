@@ -106,9 +106,11 @@ export default function Home() {
           console.log(newUserData);
           return newUserData;
         }
-
       })
       setIsLoading(false);
+      setDescription("");
+      setTheme("");
+      setProjectName("");
     } catch (err) {
       console.error(err);
       setIsLoading(false);
@@ -157,9 +159,9 @@ export default function Home() {
             </VStack>
           </VStack>
           <VStack spacing={3} alignItems="center">
-            <Input onChange={(event) => setProjectName(event.target.value)} width="70%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
-            <Input onChange={(event) => setDescription(event.target.value)} width="70%" background="white" placeholder="Description?" value={description}/>
-            <Input onChange={(event) => setTheme(event.target.value)} width="70%" background="white" placeholder="Music style?" value={theme}></Input>
+            <Input disabled={isLoading} onChange={(event) => setProjectName(event.target.value)} width="70%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
+            <Input disabled={isLoading} onChange={(event) => setDescription(event.target.value)} width="70%" background="white" placeholder="Description?" value={description}/>
+            <Input disabled={isLoading} onChange={(event) => setTheme(event.target.value)} width="70%" background="white" placeholder="Music style?" value={theme}></Input>
             </VStack>
           </HStack>
           <Button
@@ -185,7 +187,7 @@ export default function Home() {
           ))
         }
       </SimpleGrid>
-      <FileModal project={userData?.projects[selectedIndex]} onClose={onClose} isOpen={isOpen}></FileModal>
+      <FileModal setUserData={setUserData} project={userData?.projects[selectedIndex]} onClose={onClose} isOpen={isOpen}></FileModal>
     </Container>
     
   );
