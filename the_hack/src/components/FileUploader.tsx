@@ -53,7 +53,7 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
       bg="white"
       borderRadius="10"
     >
-      <Button colorScheme='teal' border="4px solid" variant="outline" height="100%" width="100%" justifyContent="center" display="block">
+      <Button colorScheme='blue' border="4px solid" variant="outline" height="100%" width="100%" justifyContent="center" display="block">
         <Box fontFamily="Urbanist" width="100%" fontSize="xl">
           +
         </Box>

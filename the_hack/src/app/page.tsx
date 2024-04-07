@@ -123,16 +123,17 @@ export default function Home() {
       <Box
         ml="-4"
         width="100vw"
-        height="100%"
+        height="150%"
         overflow="scroll"
         bgImage="url('/bg2.png')"
         bgSize="cover"
-        bgPosition="stretch"
+        bgPosition="center"
       >
 
         <Image
           src="logo.png"
           width="20%"
+          marginTop="10px"
           position="absolute"
         >
         </Image>
@@ -142,7 +143,7 @@ export default function Home() {
         width="100%"
         alignItems="center"
         spacing={3}
-        mt={20}
+        mt={10}
         >
         <HStack width="100%" alignItems="top" justifyContent="center" spacing={10}>
           <VStack>
@@ -155,9 +156,13 @@ export default function Home() {
               ))}
             </VStack>
           </VStack>
-        </HStack>
+          <VStack spacing={3} alignItems="center">
+            <Input onChange={(event) => setProjectName(event.target.value)} width="70%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
+            <Input onChange={(event) => setDescription(event.target.value)} width="70%" background="white" placeholder="Description?" value={description}/>
+            <Input onChange={(event) => setTheme(event.target.value)} width="70%" background="white" placeholder="Music style?" value={theme}></Input>
+            </VStack>
+          </HStack>
           <Button
-            mt={-5}
             mb={10}
             isDisabled={isLoading || !(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
             onClick={handleUpload}>
@@ -168,8 +173,9 @@ export default function Home() {
 
             </Button>
         </VStack>
+        
       </Box>
-      <SimpleGrid minChildWidth='250px' spacing='40px' mx='10px' width="70%" margin="auto">
+      <SimpleGrid minChildWidth='20%' spacing='40px' mx='10px' width="60%" margin="auto">
         {
           userData?.projects.map((project: Project, index: number) => (
             <FileCard key={index} project={project} onClick={ () => {
