@@ -49,19 +49,18 @@ export default function Home() {
   //   // process next document
   // });
 
+  const fetchProjects = () => {
+    fetch(`http://127.0.0.1:8000/getallprojects/${userid}`)
+      .then(response => response.json())
+      .then(json => {
+        setUserData(json);
+      })
+      .catch(error => console.error('Error fetching projects:', error));
+  };
+
   useEffect(() => {
-    const fetchProjects = () => {
-      fetch(`http://127.0.0.1:8000/getallprojects/${userid}`)
-        .then(response => response.json())
-        .then(json => {
-          setUserData(json);
-        })
-        .catch(error => console.error('Error fetching projects:', error));
-    };
-  
     // Immediately invoke the fetch operation when the component mounts
     fetchProjects();
-    
     // Set up the interval to repeat the fetch operation every 6 seconds
     //const intervalId = setInterval(fetchProjects, 6000);
   
@@ -147,8 +146,8 @@ export default function Home() {
             </VStack>
             <VStack spacing={3} alignItems="center">
               <Input onChange={(event) => setProjectName(event.target.value)} width="60%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
-              <Input width="60%" background="white" placeholder="Description?" value={description}/>
-              <Input width="60%" background="white" placeholder="Music style?" value={theme}></Input>
+              <Input onChange={(event) => setDescription(event.target.value)} width="60%" background="white" placeholder="Description?" value={description}/>
+              <Input onChange={(event) => setTheme(event.target.value)} width="60%" background="white" placeholder="Music style?" value={theme}></Input>
             </VStack>
           </HStack>
           <Button
