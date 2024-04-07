@@ -24,16 +24,30 @@ export const FileCard = ({ project, onClick }: FileCardProps) => {
   return (
     <Card maxW="md" onClick={onClick}>
       <CardHeader>
-        <Heading size='md'>{project?.projectname}</Heading>
+        <Heading
+          size='md'
+          letterSpacing='wide'
+          color='gray.700'
+          textAlign='left'
+          textTransform='uppercase'
+          fontWeight='bold'
+        >{project?.projectname}</Heading>
+        <Text
+          fontSize='s'
+          color='gray.500'
+          fontWeight='light'
+          textAlign='right'
+          mt={-6}
+          letterSpacing='wide'
+        >{project.creationdate}</Text>
       </CardHeader>
       <Image
         objectFit="cover"
-        src={project.thumbnail}
-        alt="Chakra UI"
+        src={project.thumbnail || "./imgs/1.jpg"}
+        alt="Album Image"
       />
       <CardBody>
         <Text>{project.description}</Text>
-        <Text fontSize='xs'>Created on {project.creationdate}</Text>
       </CardBody>
       <CardFooter
         justify="space-between"
@@ -45,7 +59,6 @@ export const FileCard = ({ project, onClick }: FileCardProps) => {
         }}
       >
         <Button flex="1" variant="ghost" leftIcon={<DeleteIcon />}>
-          Delete
         </Button>
       </CardFooter>
     </Card>

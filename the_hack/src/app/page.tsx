@@ -115,13 +115,30 @@ export default function Home() {
         width="100vw"
         height="100%"
         overflow="scroll"
+        bgImage="url('/bg.png')"
+        bgSize="cover"
+        bgPosition="center"
       >
+
+        <Text
+          fontSize="4xl"
+          fontWeight="bold"
+          textTransform="uppercase"
+          textAlign="center"
+          letterSpacing="wide"
+          color="white"
+          mt={10}
+          mb={-10}
+        >
+          Music Notes
+        </Text>
+        
         <VStack
         width="100%"
         alignItems="center"
         spacing={3}
         mt={20}
-      >
+        >
         <FileUpload fileList={fileList} setFileList={setFileList}></FileUpload>
         <VStack
           spacing={0}
