@@ -190,6 +190,7 @@ async def fetch_user_feed(userid: str):
     try:
         collection = client['thelasthackbackend']['users']
         result = collection.find_one({'userid':userid}, {'_id': 0})
+        result["projects"] = result["projects"][::-1]
         return result
     except Exception as e:
         raise HTTPException(
