@@ -37,22 +37,27 @@ async def generate_music_from_text(text: str, theme: str, title: str, token: str
         "title": title,
         "tags": theme,
     }
-    print(data)
-    print(token)
     r = await generate_music(data, token)
     print(f"r: {r}")
    
     json_resp = r
     aid1 = None
     aid2 = None
-    clips = json_resp.get("clips", [])
-    if clips:
-        aid1 = clips[0].get("id", "")
-        aid2 = clips[1].get("id", "")
+    if isinstance(json_resp, dict):
+        clips = json_resp.get("clips", [])
+        if clips:
+            aid1 = clips[0].get("id", "")
+            aid2 = clips[1].get("id", "")
+            status = "generating"
+        else: 
+            aid1 = "",
+            aid2 = "",
+            status = "error"
     else:
         aid1 = ""
-        aid2 = ""
-    return aid1, aid2
+        aid2 = "",
+        status = "error"
+    return aid1, aid2, status
 
 async def fetch(url, headers=None, data=None, method="POST"):
     if headers is None:

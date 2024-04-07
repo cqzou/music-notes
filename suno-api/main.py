@@ -14,7 +14,7 @@ from utils import generate_id, generate_lyrics, generate_music, get_feed, get_ly
 from topic_segment import TopicSegmenter
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from db_utils import create_empty_project, delete_project, update_audio_url, update_project_completion_status
+from db_utils import create_empty_project, delete_project, update_audio_url, update_audio_urls, update_project_completion_status
 from dotenv import load_dotenv
 import os
 import certifi
@@ -44,28 +44,20 @@ app.add_middleware(
 )
 
 
-async def __background_generate_songs(client, userid, segmented_data, theme, title, token, projectid):
-    aids = []
-    for data in segmented_data:
-        print(f"data: {data}")
-        print(f"lyrics: {data['lyrics']}")
-        lyrics = data["lyrics"]
-        topicname = data["topicname"]
-        aid1, aid2 = await generate_music_from_text(lyrics, theme=theme, title=title, token=token)
-        aids.append((topicname, aid1))
-    print(f"aids: {aids}")
-    for topicname, aid in aids:
-        try:
-            audio_url, metadata, image_url = await save_song(aid, token)
-        except TimeoutError as err: 
-            print("timeout error sadpag")
-            audio_url = f"https://cdn1.suno.ai/{aid}.mp3"
-            image_url = f"https://cdn1.suno.ai/image_{aid}.png"
+# async def __background_generate_songs(client, userid, segmented_data, theme, title, token, projectid):
+#     print(f"aids: {aids}")
+#     # for topicname, aid in aids:
+#     #     try:
+#     #         audio_url, metadata, image_url = await save_song(aid, token)
+#     #     except TimeoutError as err: 
+#     #         print("timeout error sadpag")
+#     #         audio_url = f"https://cdn1.suno.ai/{aid}.mp3"
+#     #         image_url = f"https://cdn1.suno.ai/image_{aid}.png"
 
-        # response = await update_audio_url(client, userid, projectid, topicname, audio_url)
-        response = await update_audio_url(client, userid, projectid, topicname, audio_url, aid)
-    response = await update_project_completion_status(client, userid, projectid, image_url)
-    print(f"response: {response}")
+#         # response = await update_audio_url(client, userid, projectid, topicname, audio_url)
+#     response = await update_audio_url(client, userid, projectid, topicname, audio_url, aid)
+#     response = await update_project_completion_status(client, userid, projectid, image_url)
+#     print(f"response: {response}")
 
 @app.get("/")
 async def get_root():
@@ -102,7 +94,6 @@ async def generate_with_song_description(
 async def fetch_feed(aid: str, token: str = Depends(get_token)):
     try:
         resp = await get_feed(aid, token)
-        print(resp)
         return resp
     except Exception as e:
         raise HTTPException(
@@ -165,15 +156,25 @@ async def create_upload_files(background_tasks: BackgroundTasks, file: UploadFil
         #segmented_data = None
         print(f"segmented_data:{segmented_data}")
         projectid = generate_id()
-        topics = [schemas.Topic(topicname=data["topicname"], lyrics=data["lyrics"], mp3="").model_dump() for data in segmented_data]
-        new_empty_project = schemas.Project(projectid=projectid, processingstatus="generating", projectname=projectname, description=description, thumbnail='', topics=topics)
+        topics = [schemas.Topic(topicname=data["topicname"], lyrics=data["lyrics"], mp3="", status="loading").model_dump() for data in segmented_data]
+        new_empty_project = schemas.Project(projectid=projectid, processingstatus="generating", projectname=projectname, description=description, thumbnail='', topics=topics, creationdate="4/7/24")
         response = await create_empty_project(client, userid, new_empty_project)
-        print(response)
+        print(f"response to create_empty_proj: {response}")
         #return {"segmented_data": segmented_data, "audio_url": audio_url, "metadata": metadata}
-        background_tasks.add_task(__background_generate_songs, client, userid, segmented_data[0:3], theme, projectname, token, projectid)
-        return {"segmented_data": segmented_data}
-
-
+        #background_tasks.add_task(__background_generate_songs, client, userid, segmented_data[0:3], theme, projectname, token, projectid)
+        aids, topicnames, audio_urls, statuses = [], [], [], []
+        for data in segmented_data:
+            print(f"data: {data}")
+            print(f"lyrics: {data['lyrics']}")
+            lyrics = data["lyrics"]
+            topicname = data["topicname"]
+            aid1, aid2, status = await generate_music_from_text(lyrics, theme=theme, title=topicname, token=token)
+            aids.append(aid1)
+            topicnames.append(topicname)
+            audio_urls.append("")
+            statuses.append(status)
+        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=audio_urls, statuses=statuses)
+        return {"data": response["data"]}
 
     except Exception as e:
         print(e)
@@ -190,6 +191,7 @@ async def fetch_user_feed(userid: str):
     try:
         collection = client['thelasthackbackend']['users']
         result = collection.find_one({'userid':userid}, {'_id': 0})
+        result["projects"] = result["projects"][::-1]
         return result
     except Exception as e:
         raise HTTPException(

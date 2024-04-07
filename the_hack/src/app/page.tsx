@@ -3,7 +3,7 @@ import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
-import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input } from "@chakra-ui/react";
+import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Image, Spinner } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
@@ -98,6 +98,16 @@ export default function Home() {
         },
       });
       console.log(response);
+      setUserData((prevUserData: UserData | undefined) => {
+        if (prevUserData) {
+          let newUserData: UserData | undefined = {...prevUserData};
+          console.log(newUserData);
+          newUserData.projects = response.data.data;
+          console.log(newUserData);
+          return newUserData;
+        }
+
+      })
       setIsLoading(false);
     } catch (err) {
       console.error(err);
@@ -111,55 +121,55 @@ export default function Home() {
   return (
     <Container maxW="100%">
       <Box
+        ml="-4"
         width="100vw"
         height="100%"
         overflow="scroll"
-        bgImage="url('/bg.png')"
+        bgImage="url('/bg2.png')"
         bgSize="cover"
-        bgPosition="center"
+        bgPosition="stretch"
       >
 
-        <Text
-          fontSize="4xl"
-          fontWeight="bold"
-          textTransform="uppercase"
-          textAlign="center"
-          letterSpacing="wide"
-          color="white"
-          mt={10}
-          mb={-10}
+        <Image
+          src="logo.png"
+          width="20%"
+          position="absolute"
         >
-          Music Notes
-        </Text>
+        </Image>
+
         
-        <VStack width="100%" alignItems="center" justifyContent="center" spacing={10} mt={20}>
-          <HStack width="100%" alignItems="top" justifyContent="center" spacing={10}>
-            <VStack>
-              <FileUpload fileList={fileList} setFileList={setFileList}></FileUpload>
-              <VStack spacing={0}>
-                {fileList.map((file: any, index: number) => (
-                  <Text key={index}>
-                    {file.name}
-                  </Text>
-                ))}
-              </VStack>
+        <VStack
+        width="100%"
+        alignItems="center"
+        spacing={3}
+        mt={20}
+        >
+        <HStack width="100%" alignItems="top" justifyContent="center" spacing={10}>
+          <VStack>
+            <FileUpload fileList={fileList} setFileList={setFileList}></FileUpload>
+            <VStack spacing={0}>
+              {fileList.map((file: any, index: number) => (
+                <Text key={index}>
+                  {file.name}
+                </Text>
+              ))}
             </VStack>
-            <VStack spacing={3} alignItems="center">
-              <Input onChange={(event) => setProjectName(event.target.value)} width="60%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
-              <Input onChange={(event) => setDescription(event.target.value)} width="60%" background="white" placeholder="Description?" value={description}/>
-              <Input onChange={(event) => setTheme(event.target.value)} width="60%" background="white" placeholder="Music style?" value={theme}></Input>
-            </VStack>
-          </HStack>
+          </VStack>
+        </HStack>
           <Button
             mt={-5}
-            mb={5}
-            isDisabled={!(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
+            mb={10}
+            isDisabled={isLoading || !(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
             onClick={handleUpload}>
-            Generate Study Playlist</Button>
+            
+            {!isLoading && `Generate Study Playlist`}
+
+            {isLoading && <Spinner/>}
+
+            </Button>
         </VStack>
-        
       </Box>
-      <SimpleGrid minChildWidth='250px' spacing='40px' m='10px'>
+      <SimpleGrid minChildWidth='250px' spacing='40px' mx='10px' width="70%" margin="auto">
         {
           userData?.projects.map((project: Project, index: number) => (
             <FileCard key={index} project={project} onClick={ () => {

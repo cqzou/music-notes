@@ -11,7 +11,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body style={{backgroundColor: "#F1EFE6"}}>
         <ChakraProvider theme={theme}>
           {children}
         </ChakraProvider>
