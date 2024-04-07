@@ -59,14 +59,20 @@ export const FileModal = ({ project, onClose, isOpen }: FileModalProps) => {
                   </AccordionButton>
                   <AccordionPanel pb={4}>
                     <Text>{topic.lyrics}</Text>
-                    <Button
-                      aria-label="Play"
-                      onClick={() => handlePlayButtonClick(topic.mp3)}
-                      variant="ghost"
-                      colorScheme="blue"
-                    >
-                      Play
-                    </Button>
+                    <Text
+                      fontSize="xs"
+                      color="gray.300"
+                    >Status: {topic.status}</Text>
+                    {(topic.status === "streaming" || topic.status === "complete") && (
+                      <Button
+                        aria-label="Play"
+                        onClick={() => handlePlayButtonClick(topic.mp3)}
+                        variant="ghost"
+                        colorScheme="blue"
+                      >
+                        Play
+                      </Button>
+                    )}
                   </AccordionPanel>
                 </AccordionItem>
               ))}
