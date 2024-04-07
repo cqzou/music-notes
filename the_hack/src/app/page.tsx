@@ -146,7 +146,7 @@ export default function Home() {
               </VStack>
             </VStack>
             <VStack spacing={3} alignItems="center">
-              <Input onChange={(event) => setProjectName(event.target.value)} width="60%" background="white" placeholder="Topic?" value={projectname}></Input>
+              <Input onChange={(event) => setProjectName(event.target.value)} width="60%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
               <Input width="60%" background="white" placeholder="Description?" value={description}/>
               <Input width="60%" background="white" placeholder="Music style?" value={theme}></Input>
             </VStack>
@@ -160,7 +160,7 @@ export default function Home() {
         </VStack>
         
       </Box>
-      <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
+      <SimpleGrid minChildWidth='250px' spacing='40px' m='10px'>
         {
           userData?.projects.map((project: Project, index: number) => (
             <FileCard key={index} project={project} onClick={ () => {

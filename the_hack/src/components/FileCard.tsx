@@ -22,7 +22,10 @@ interface FileCardProps {
 
 export const FileCard = ({ project, onClick }: FileCardProps) => {
   return (
-    <Card maxW="md" onClick={onClick}>
+    <Card
+      maxW="md"
+      backgroundColor="gray.100"
+      onClick={onClick}>
       <CardHeader>
         <Heading
           size='md'
@@ -57,9 +60,8 @@ export const FileCard = ({ project, onClick }: FileCardProps) => {
             minW: "136px",
           },
         }}
+        mb={-10}
       >
-        <Button flex="1" variant="ghost" leftIcon={<DeleteIcon />}>
-        </Button>
       </CardFooter>
     </Card>
   );
