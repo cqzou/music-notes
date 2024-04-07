@@ -2,6 +2,9 @@ import { defineStyleConfig, extendTheme } from '@chakra-ui/react';
 import type { StyleFunctionProps } from '@chakra-ui/styled-system';
 import { mode } from '@chakra-ui/theme-tools';
 import '@fontsource-variable/urbanist';
+import '@fontsource-variable/domine';
+import '@fontsource/alfa-slab-one';
+import '@fontsource/poppins';
 
 
 const textBlackColor = '#303030';
@@ -61,12 +64,12 @@ const theme = extendTheme({
     useSystemColorMode: false,
   },
   fonts: {
-    body: 'Urbanist, sans-serif',
-    heading: 'Urbanist, serif',
+    body: `'Poppins','Urbanist, sans-serif'`,
+    heading: `'Alfa Slab One', 'Domine Variable', serif`,
     mono: 'Menlo, monospace',
   },
   colors: {
-    base: '#FFFFFF',
+    base: '#F1EFE6',
     link: '#44ffb2',
     breadCrumb: '#B1C7DF',
     ...themeColors,
@@ -82,6 +85,7 @@ const theme = extendTheme({
       },
       h1: {
         fontSize: '48px',
+        fontWeight: 'bold'
       },
       h2: {
         fontSize: '36px',

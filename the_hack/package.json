@@ -14,7 +14,10 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@fontsource-variable/domine": "^5.0.17",
     "@fontsource-variable/urbanist": "^5.0.20",
+    "@fontsource/alfa-slab-one": "^5.0.19",
+    "@fontsource/poppins": "^5.0.13",
     "antd": "^5.16.1",
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",
@@ -34,7 +37,10 @@
     "typescript": "5.4.4"
   },
   "resolve": {
-    "extensions": [".ts", ".js"],
+    "extensions": [
+      ".ts",
+      ".js"
+    ],
     "fallback": {
       "child_process": false
     }
