@@ -3,7 +3,7 @@ import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
-import { Text, Box, Button, VStack, Container, SimpleGrid, useDisclosure } from "@chakra-ui/react";
+import { Text, Box, Button, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
@@ -18,8 +18,12 @@ export default function Home() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [fileList, setFileList] = useState<any>([]);
   const [userData, setUserData] = useState<UserData>();
-  const [selectedProject, setSelectedProject] = useState<any>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [ isLoading, setIsLoading ] = useState(false);
+
+  const [description, setDescription] = useState("");
+  const [theme, setTheme] = useState("");
+  const [projectname, setProjectName] = useState("");
 
   useEffect(() => {
 
@@ -82,22 +86,23 @@ export default function Home() {
     const formData = new FormData();
     formData.append('file', file.originFileObj);
     formData.append('userid', 'fioenoe213384fh83833djdiu');
-    formData.append('description', 'this is a description...');
-    formData.append('theme', 'electronic bluegrass');
-    formData.append('projectname', 'this is my title');
+    formData.append('description', description);
+    formData.append('theme', theme);
+    formData.append('projectname', projectname);
     const uploadUrl = 'http://127.0.0.1:8000/uploadfiles/';
   
     try {
+      setIsLoading(true);
       const response = await axios.post(uploadUrl, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
       });
-  
       console.log(response);
-        
+      setIsLoading(false);
     } catch (err) {
       console.error(err);
+      setIsLoading(false);
     }
   };
 
@@ -129,7 +134,13 @@ export default function Home() {
             </>
           ))}
         </VStack>
-        <Button onClick={handleUpload}>Generate Study Playlist</Button>
+        <VStack>
+          <Input onChange={(event) => setProjectName(event.target.value)} width="60%" placeholder="project name?" value={projectname}></Input>
+          <Textarea width="60%" placeholder="What's the subject of this file?" value={description}/>
+          <Input width="60%" placeholder="Song theme?" value={theme}></Input>
+          <Text>suggestions: </Text>
+        </VStack>
+        <Button isDisabled={!(fileList.length > 0 && description != "" && theme != "" && projectname != "")} onClick={handleUpload}>Generate Study Playlist</Button>
       </VStack>
         
       </Box>
