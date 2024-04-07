@@ -41,10 +41,13 @@ export default function Home() {
         <VStack
           spacing={0}
         >
-          {fileList.map((file: FileType, index: number) => (
+          {fileList.map((file: any, index: number) => (
+            <>
             <Text key={index}>
               {file.name}
             </Text>
+            { file.response && <audio controls={true} src={file.response.audio_url}></audio>}
+            </>
           ))}
         </VStack>
         

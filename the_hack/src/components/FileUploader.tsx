@@ -43,7 +43,7 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
   };
 
   const handleChange: UploadProps['onChange'] = info => {
-    //console.log(info);
+    console.log(info);
     setFileList(info.fileList.slice());
   };
 

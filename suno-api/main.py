@@ -9,7 +9,7 @@ import PyPDF2
 import schemas
 import io
 from deps import get_token
-from utils import generate_lyrics, generate_music, get_feed, get_lyrics
+from utils import generate_lyrics, generate_music, get_feed, get_lyrics, generate_music_from_text, save_song
 from topic_segment import TopicSegmenter
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
@@ -129,14 +129,27 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
 
 #Read bytes from fileUpload, parse them and return text string 
 @app.post("/uploadfiles/")
-async def create_upload_files(file: UploadFile):
-    pdf_bytes = await file.read()  # Read file as binary data
-    text = extract_text_from_pdf(pdf_bytes)  # Extract text from PDF
-    print(text)
-    segmenter = TopicSegmenter()
-    data = segmenter.segment_topic(text)
-    print(data)
-    return {"data": data}
+async def create_upload_files(file: UploadFile, token: str = Depends(get_token)):
+    try:
+        pdf_bytes = await file.read()  # Read file as binary data
+        text = extract_text_from_pdf(pdf_bytes)  # Extract text from PDF
+        print(text)
+        segmenter = TopicSegmenter()
+        segmented_data = segmenter.segment_topic(text)
+        #segmented_data = None
+        print(segmented_data[0]["lyrics"])
+        lyrics = segmented_data[0]["lyrics"]
+        aid1, aid2 = await generate_music_from_text(lyrics, theme="electronic", title="bowowoow", token=token)
+        print(aid1, aid2)
+        audio_url, metadata = await save_song(aid1, token)
+
+        return {"segmented_data": segmented_data, "audio_url": audio_url, "metadata": metadata}
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="idk man"
+        )
+
 
 # Get user data
 @app.get("/getallprojects/{userid}")
