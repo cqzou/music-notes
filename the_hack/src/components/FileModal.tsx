@@ -119,181 +119,55 @@ export const FileModal = ({ project, onClose, isOpen, setUserData }: FileModalPr
 
   return (
     <>
-      <Modal onClose={onClose} size="full" isOpen={isOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <HStack justifyContent="space-between">
-            <Text>{project?.projectname}</Text>
-            <HStack mr={"10%"}>
-              <Button onClick={updateThing} disabled={isLoading}>
-                Refresh
-              </Button>
-              <Button onClick={deleteProject} disabled={isLoading}>
-                Delete
-              </Button>
-              </HStack>
-            </HStack>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text mb={10}>
-              {project?.description}
-            </Text>
-            <Accordion allowToggle>
-              {project?.topics.map((topic: any, index: number) => (
-                <AccordionItem key={index}>
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      <Heading as="h4" size="md">
-                        {topic.topicname}
-                      </Heading>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel pb={4}>
-                    <Text>{topic.lyrics}</Text>
-                    <Text
-                      fontSize="xs"
-                      color="gray.300"
-                    >Status: {topic.status}</Text>
-                    {(topic.status === "streaming" || topic.status === "complete") && (
-                      <Button
-                        aria-label="Play"
-                        onClick={() => handlePlayButtonClick(topic.mp3)}
-                        variant="ghost"
-                        colorScheme="blue"
-                      >
-                        Play
-                      </Button>
-                    )}
-                  </AccordionPanel>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </ModalBody>
-          <ModalFooter>
-            <Flex alignItems="center" justifyContent="center" w="100%">
-              {currentMp3 && (
-                <audio ref={audioRef} src={currentMp3} controls />
-              )}
-            </Flex>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
-  );
-}
-
-/*
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [currentMp3, setCurrentMp3] = useState<string | null>(null);
-
-  const handleAccordionClick = (mp3: string) => {
-    setCurrentMp3(mp3);
-    if (audioRef.current) {
-      audioRef.current.src = mp3;
-      audioRef.current.play();
-    }
-  };
-
-  const handlePlayButtonClick = (mp3: string) => {
-    setCurrentMp3(mp3);
-    if (audioRef.current) {
-      audioRef.current.src = mp3;
-      audioRef.current.play();
-    }
-  };
-
-  return (
-    <>
-      <Modal onClose={onClose} size="full" isOpen={isOpen}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{project?.projectname}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Accordion allowToggle>
-              {project?.topics.map((topic: any, index: number) => (
-                <AccordionItem key={index}>
-                  <AccordionButton onClick={() => handleAccordionClick(topic.mp3)}>
-                    <Box as="span" flex="1" textAlign="left">
-                      <Heading as="h4" size="md">
-                        {topic.topicname}
-                      </Heading>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel pb={4}>
-                    {topic.lyrics}
-                    <IconButton
-                      aria-label="Play"
-                      icon={<MdPlayArrow />}
-                      onClick={() => handlePlayButtonClick(topic.mp3)}
-                      variant="ghost"
-                    />
-                  </AccordionPanel>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </ModalBody>
-          <ModalFooter>
-            <Flex alignItems="center" justifyContent="center" w="100%">
-              <audio ref={audioRef} controls />
-            </Flex>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
-  );
-};
-
-/*
-export const FileModal = ({
-  project,
-  onClose,
-  isOpen,
-}: FileModalProps) => {
-  return (
-    <>
-      <Modal onClose={onClose} size='xl' isOpen={isOpen}>
-        <ModalOverlay />
-        <ModalContent  width="100rem">
-          <ModalHeader>
-            {project?.projectname}
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Accordion allowToggle>
-              { project?.topics.map((topic: any, index: number) => (
-                <AccordionItem>
-                  <AccordionButton>
-                    <Box as="span" flex='1' textAlign='left'>
-                      <Heading as="h4" size="md">
+    <Modal onClose={onClose} size="full" isOpen={isOpen}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{project?.projectname}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Accordion allowToggle>
+            {project?.topics.map((topic: any, index: number) => (
+              <AccordionItem key={index}>
+                <AccordionButton>
+                  <Box as="span" flex="1" textAlign="left">
+                    <Heading as="h4" size="md">
                       {topic.topicname}
-                      </Heading>
-                      <Heading as="h4" size="xs">
-                      {topic?.status}
-                      </Heading>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
+                    </Heading>
+                  </Box>
+                  <AccordionIcon />
+                </AccordionButton>
                 <AccordionPanel pb={4}>
-                  {topic.lyrics}
-                  {topic.mp3 != "" ? <audio controls src={`${topic.mp3}`} /> : <></>}
+                  <Text>{topic.lyrics}</Text>
+                  <Button
+                    aria-label="Play"
+                    onClick={() => handlePlayButtonClick(topic.mp3)}
+                    variant="ghost"
+                    colorScheme="blue"
+                  >
+                    Play
+                  </Button>
                 </AccordionPanel>
               </AccordionItem>
-              ))}
-            </Accordion>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onClose}>Close</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+            ))}
+          </Accordion>
+        </ModalBody>
+        <ModalFooter>
+          <Flex direction="column" alignItems="center" w="100%">
+            {currentMp3 && (
+              <Flex direction="column" alignItems="center" w="100%">
+                <audio
+                  ref={audioRef}
+                  src={currentMp3}
+                  controls
+                  style={{ width: "90%" }} // Make the audio element longer
+                />
+              </Flex>
+            )}
+          </Flex>
+          <Button onClick={onClose}>Close</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  </>
   );
-};
-*/
+}
