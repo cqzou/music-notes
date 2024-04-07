@@ -9,6 +9,22 @@ def find_project_by_id(projects, projectid):
             return index
     return None
 
+async def get_empty_topics(client, userid, projectid):
+    collection = client['thelasthackbackend']['users']
+    result = collection.find_one({'userid':userid}, {'_id': 0})
+    topics = []
+    if result and "projects" in result:
+        projects = result["projects"]
+        proj_index = find_project_by_id(projects, projectid)
+        if proj_index is not None:
+            project = projects[proj_index].copy()
+            for index, topic in enumerate(project["topics"]):
+                if topic.get("status") == "generating" or topic.get("status") == "streaming":
+                    topics.append(topic)
+    return topics
+
+
+
 async def create_empty_project(client, userid, project):
     project = project.model_dump()
     collection = client['thelasthackbackend']['users']
@@ -58,7 +74,7 @@ async def update_audio_url(client, userid, projectid, topicname, new_audio_url, 
         #
         return {"success": True, "message": "No projects found? idk what's goin on here dog u shouldn't be here LOOOL"}
 
-async def update_audio_urls(client, userid, projectid, topicnames, new_audio_urls, audio_ids, statuses):
+async def update_audio_urls(client, userid, projectid, topicnames, new_audio_urls, audio_ids, statuses, image_url):
     collection = client['thelasthackbackend']['users']
     result = collection.find_one({'userid':userid}, {'_id': 0})   
 
@@ -76,6 +92,8 @@ async def update_audio_urls(client, userid, projectid, topicnames, new_audio_url
                     
                 else:
                     return {"success": True, "message": "uhhh i can't find the topic??"}
+            if project["thumbnail"] == "" and image_url != "":
+                project["thumbnail"] = image_url
             projects[proj_index] = project
             update_result = collection.update_one({'userid': userid}, {'$set': {'projects': projects}})
             print(update_result)

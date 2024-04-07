@@ -14,7 +14,7 @@ from utils import generate_id, generate_lyrics, generate_music, get_feed, get_ly
 from topic_segment import TopicSegmenter
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
-from db_utils import create_empty_project, delete_project, update_audio_url, update_audio_urls, update_project_completion_status
+from db_utils import create_empty_project, delete_project, get_empty_topics, update_audio_url, update_audio_urls, update_project_completion_status
 from dotenv import load_dotenv
 import os
 import certifi
@@ -173,7 +173,7 @@ async def create_upload_files(background_tasks: BackgroundTasks, file: UploadFil
             topicnames.append(topicname)
             audio_urls.append("")
             statuses.append(status)
-        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=audio_urls, statuses=statuses)
+        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=audio_urls, statuses=statuses, image_url="")
         return {"data": response["data"]}
 
     except Exception as e:
@@ -208,6 +208,30 @@ async def lebron(userid: str, projectid: str):
         raise HTTPException(
             detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+    
+@app.get("/update_project_audio/{userid}/{projectid}")
+async def lebron_james(userid: str, projectid: str, token: str = Depends(get_token)):
+    try:
+        empty_topics = await get_empty_topics(client, userid, projectid)
+        new_audio_urls = []
+        aids = []
+        topicnames = []
+        statuses = []
+        image_url = ""
+        for topic in empty_topics:
+            aid = topic["aid"]
+            topicname = topic["topicname"]
+            audio_url, metadata, image_url, status = await save_song(aid, token)
+            aids.append(aid)
+            new_audio_urls.append(audio_url)
+            topicnames.append(topicname)
+            statuses.append(status)
+        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=new_audio_urls, statuses=statuses, image_url=image_url)        
+        return response
+    except Exception as e:
+        raise HTTPException(
+            detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )    
 
 # Get user data
 @app.get("/lebronhames/{userid}")

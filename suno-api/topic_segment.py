@@ -17,7 +17,7 @@ class TopicSegmenter:
 
 	def segment_topic(self, text: str):
 			
-		num_topics = 6
+		num_topics = 4
 
 		prompt = f'Extract {num_topics} different topics in the following text. Topics must not overlap. For each topic, provide a short title no longer than 4 words. Then, for each topic, write a detailed 1-paragraph encyclopedia-style summary about the topic in simple terms. Format your response in JSON format of "topic": " 1-paragraph summary"\n\n{text}'
 

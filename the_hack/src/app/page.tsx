@@ -2,8 +2,8 @@
 import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
-import { GetProp, UploadProps } from "antd";
-import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Image, Spinner } from "@chakra-ui/react";
+import { Divider, GetProp, UploadProps } from "antd";
+import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Image, Spinner, Heading } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
@@ -106,9 +106,11 @@ export default function Home() {
           console.log(newUserData);
           return newUserData;
         }
-
       })
       setIsLoading(false);
+      setDescription("");
+      setTheme("");
+      setProjectName("");
     } catch (err) {
       console.error(err);
       setIsLoading(false);
@@ -123,16 +125,17 @@ export default function Home() {
       <Box
         ml="-4"
         width="100vw"
-        height="100%"
+        height="150%"
         overflow="scroll"
         bgImage="url('/bg2.png')"
         bgSize="cover"
-        bgPosition="stretch"
+        bgPosition="center"
       >
 
         <Image
           src="logo.png"
           width="20%"
+          marginTop="10px"
           position="absolute"
         >
         </Image>
@@ -142,7 +145,7 @@ export default function Home() {
         width="100%"
         alignItems="center"
         spacing={3}
-        mt={20}
+        mt={10}
         >
         <HStack width="100%" alignItems="top" justifyContent="center" spacing={10}>
           <VStack>
@@ -155,9 +158,13 @@ export default function Home() {
               ))}
             </VStack>
           </VStack>
-        </HStack>
+          <VStack spacing={3} alignItems="center">
+            <Input disabled={isLoading} onChange={(event) => setProjectName(event.target.value)} width="70%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
+            <Input disabled={isLoading} onChange={(event) => setDescription(event.target.value)} width="70%" background="white" placeholder="Description?" value={description}/>
+            <Input disabled={isLoading} onChange={(event) => setTheme(event.target.value)} width="70%" background="white" placeholder="Music style?" value={theme}></Input>
+            </VStack>
+          </HStack>
           <Button
-            mt={-5}
             mb={10}
             isDisabled={isLoading || !(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
             onClick={handleUpload}>
@@ -168,8 +175,9 @@ export default function Home() {
 
             </Button>
         </VStack>
+        
       </Box>
-      <SimpleGrid minChildWidth='250px' spacing='40px' mx='10px' width="70%" margin="auto">
+      <SimpleGrid minChildWidth='20%' spacing='40px' mx='10px' width="80%" margin="auto">
         {
           userData?.projects.map((project: Project, index: number) => (
             <FileCard key={index} project={project} onClick={ () => {
@@ -179,7 +187,7 @@ export default function Home() {
           ))
         }
       </SimpleGrid>
-      <FileModal project={userData?.projects[selectedIndex]} onClose={onClose} isOpen={isOpen}></FileModal>
+      <FileModal setUserData={setUserData} project={userData?.projects[selectedIndex]} onClose={onClose} isOpen={isOpen}></FileModal>
     </Container>
     
   );
