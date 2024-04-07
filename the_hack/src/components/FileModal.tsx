@@ -137,6 +137,9 @@ export const FileModal = ({ project, onClose, isOpen, setUserData }: FileModalPr
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            <Text mb={10}>
+              {project?.description}
+            </Text>
             <Accordion allowToggle>
               {project?.topics.map((topic: any, index: number) => (
                 <AccordionItem key={index}>

@@ -217,6 +217,7 @@ async def lebron_james(userid: str, projectid: str, token: str = Depends(get_tok
         aids = []
         topicnames = []
         statuses = []
+        image_url = ""
         for topic in empty_topics:
             aid = topic["aid"]
             topicname = topic["topicname"]
@@ -225,7 +226,7 @@ async def lebron_james(userid: str, projectid: str, token: str = Depends(get_tok
             new_audio_urls.append(audio_url)
             topicnames.append(topicname)
             statuses.append(status)
-        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=new_audio_urls, statuses=statuses)        
+        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=new_audio_urls, statuses=statuses, image_url=image_url)        
         return response
     except Exception as e:
         raise HTTPException(
