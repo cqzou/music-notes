@@ -3,7 +3,7 @@ import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
-import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input } from "@chakra-ui/react";
+import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Spinner } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
@@ -98,6 +98,16 @@ export default function Home() {
         },
       });
       console.log(response);
+      setUserData((prevUserData: UserData | undefined) => {
+        if (prevUserData) {
+          let newUserData: UserData | undefined = {...prevUserData};
+          console.log(newUserData);
+          newUserData.projects = response.data.data;
+          console.log(newUserData);
+          return newUserData;
+        }
+
+      })
       setIsLoading(false);
     } catch (err) {
       console.error(err);
@@ -153,9 +163,14 @@ export default function Home() {
           <Button
             mt={-5}
             mb={5}
-            isDisabled={!(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
+            isDisabled={isLoading || !(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
             onClick={handleUpload}>
-            Generate Study Playlist</Button>
+            
+            {!isLoading && `Generate Study Playlist`}
+
+            {isLoading && <Spinner/>}
+
+            </Button>
         </VStack>
         
       </Box>

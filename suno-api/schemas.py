@@ -53,6 +53,7 @@ class Project(BaseModel):
     projectid: str
     description: str
     thumbnail: str
+    creationdate: str 
     topics: list[dict]
 
 
