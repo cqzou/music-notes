@@ -174,12 +174,15 @@ export const FileModal = ({
                       <Heading as="h4" size="md">
                       {topic.topicname}
                       </Heading>
+                      <Heading as="h4" size="xs">
+                      {topic?.status}
+                      </Heading>
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
                 <AccordionPanel pb={4}>
                   {topic.lyrics}
-                  {topic.mp3 != "" && <audio controls src={`${topic.mp3}`} /> }
+                  {topic.mp3 != "" ? <audio controls src={`${topic.mp3}`} /> : <></>}
                 </AccordionPanel>
               </AccordionItem>
               ))}

@@ -9,6 +9,22 @@ def find_project_by_id(projects, projectid):
             return index
     return None
 
+async def get_empty_topics(client, userid, projectid):
+    collection = client['thelasthackbackend']['users']
+    result = collection.find_one({'userid':userid}, {'_id': 0})
+    topics = []
+    if result and "projects" in result:
+        projects = result["projects"]
+        proj_index = find_project_by_id(projects, projectid)
+        if proj_index is not None:
+            project = projects[proj_index].copy()
+            for index, topic in enumerate(project["topics"]):
+                if topic.get("status") == "generating":
+                    topics.append(topic)
+    return topics
+
+
+
 async def create_empty_project(client, userid, project):
     project = project.model_dump()
     collection = client['thelasthackbackend']['users']

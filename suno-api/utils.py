@@ -79,31 +79,27 @@ async def fetch(url, headers=None, data=None, method="POST"):
 
 async def save_song(aid, token):
     if aid == "":
-        return "", {}, ""
-    start_time = time.time()
-    while True:
-        response = await get_feed(aid, token)
-        print(f"response: {response}")
-        if isinstance(response, list):
-            break
-            if response[0]["audio_url"] != "":
-                break
-            elif time.time() - start_time > 120:
-                raise TimeoutError("Failed to get audio_url within 120 seconds")
-        elif time.time() - start_time > 120:
-            raise TimeoutError("Failed to get audio_url within 120 seconds")
-        time.sleep(30)
+        return "", {}, "", "error"
+    response = await get_feed(aid, token)
+    print(f"response: {response}")
+    if isinstance(response, list):
+        status = "generating"
+        if response[0]["audio_url"] != "":
+            audio_url = response[0]["audio_url"]
+            if "audiopipe" in audio_url:
+                status = "streaming"
+            else:
+                status = "complete"
+        if response[0]["image_url"] is not None:
+            image_url = response[0]["image_url"]
+        else:
+            image_url = f"https://cdn1.suno.ai/image_{aid}.png"
+        return audio_url, response[0]["metadata"], image_url, status       
+    else:
+        return "", {}, "", "generating"
     #print(f"final audio_url: {audio_url}")
     #print(f"final metadata: {metadata}")
-    if response[0]["audio_url"] != "":
-        audio_url = response[0]["audio_url"]
-    else:
-        audio_url = f"https://cdn1.suno.ai/{aid}.mp3"
-    if response[0]["image_url"] is not None:
-        image_url = response[0]["image_url"]
-    else:
-        image_url = f"https://cdn1.suno.ai/image_{aid}.png"
-    return audio_url, response[0]["metadata"], image_url
+
 
 async def get_feed(ids, token):
     headers = {"Authorization": f"Bearer {token}"}
