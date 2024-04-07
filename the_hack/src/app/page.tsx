@@ -3,7 +3,7 @@ import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
-import { Text, Box, Button, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input } from "@chakra-ui/react";
+import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
@@ -133,32 +133,31 @@ export default function Home() {
           Music Notes
         </Text>
         
-        <VStack
-        width="100%"
-        alignItems="center"
-        spacing={3}
-        mt={20}
-        >
-        <FileUpload fileList={fileList} setFileList={setFileList}></FileUpload>
-        <VStack
-          spacing={0}
-        >
-          {fileList.map((file: any, index: number) => (
-            <>
-            <Text key={index}>
-              {file.name}
-            </Text>
-            </>
-          ))}
+        <VStack width="100%" alignItems="center" justifyContent="center" spacing={10} mt={20}>
+          <HStack width="100%" alignItems="top" justifyContent="center" spacing={10}>
+            <VStack>
+              <FileUpload fileList={fileList} setFileList={setFileList}></FileUpload>
+              <VStack spacing={0}>
+                {fileList.map((file: any, index: number) => (
+                  <Text key={index}>
+                    {file.name}
+                  </Text>
+                ))}
+              </VStack>
+            </VStack>
+            <VStack spacing={3} alignItems="center">
+              <Input onChange={(event) => setProjectName(event.target.value)} width="60%" background="white" placeholder="Topic?" value={projectname}></Input>
+              <Input width="60%" background="white" placeholder="Description?" value={description}/>
+              <Input width="60%" background="white" placeholder="Music style?" value={theme}></Input>
+            </VStack>
+          </HStack>
+          <Button
+            mt={-5}
+            mb={5}
+            isDisabled={!(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
+            onClick={handleUpload}>
+            Generate Study Playlist</Button>
         </VStack>
-        <VStack>
-          <Input onChange={(event) => setProjectName(event.target.value)} width="60%" placeholder="project name?" value={projectname}></Input>
-          <Textarea width="60%" placeholder="What's the subject of this file?" value={description}/>
-          <Input width="60%" placeholder="Song theme?" value={theme}></Input>
-          <Text>suggestions: </Text>
-        </VStack>
-        <Button isDisabled={!(fileList.length > 0 && description != "" && theme != "" && projectname != "")} onClick={handleUpload}>Generate Study Playlist</Button>
-      </VStack>
         
       </Box>
       <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
