@@ -5,6 +5,7 @@ import '@fontsource-variable/urbanist';
 import '@fontsource-variable/domine';
 import '@fontsource/alfa-slab-one';
 import '@fontsource/poppins';
+import '@fontsource/rubik-mono-one';
 
 
 const textBlackColor = '#303030';
@@ -65,7 +66,7 @@ const theme = extendTheme({
   },
   fonts: {
     body: `'Poppins','Urbanist, sans-serif'`,
-    heading: `'Alfa Slab One', 'Domine Variable', serif`,
+    heading: `'Domine Variable', serif`,
     mono: 'Menlo, monospace',
   },
   colors: {
@@ -85,10 +86,11 @@ const theme = extendTheme({
       },
       h1: {
         fontSize: '48px',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
       },
       h2: {
         fontSize: '36px',
+        fontWeight: 'bold',
       },
       button: {
         color: mode(textBlackColor, textWhiteColor)(props),
