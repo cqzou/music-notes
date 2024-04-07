@@ -30,7 +30,7 @@ export const FileCard = ({ project, onClick }: FileCardProps) => {
       onClick={onClick}>
       <CardHeader position="absolute" top="0" left="0" right="0" backgroundColor="rgba(0,0,0, 0.4)" borderRadius={10} p={4}>
         <Heading
-          size='lg'
+          size='md'
           letterSpacing='wide'
           color='white'
           textAlign='center'
@@ -51,7 +51,7 @@ export const FileCard = ({ project, onClick }: FileCardProps) => {
       <Image
         borderRadius={10}
         objectFit="cover"
-        src={project.thumbnail || "./imgs/1.jpg"}
+        src={project.thumbnail || "./imgs/2.jpg"}
         alt="Album Image"
       />
       <Text

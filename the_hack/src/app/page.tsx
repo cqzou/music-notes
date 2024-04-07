@@ -3,7 +3,11 @@ import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
+<<<<<<< HEAD
 import { Text, Box, Button, VStack, HStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Spinner } from "@chakra-ui/react";
+=======
+import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Image, Spinner } from "@chakra-ui/react";
+>>>>>>> b42efd41f22f0d88cdf877b94e8092e44508e760
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
@@ -121,26 +125,22 @@ export default function Home() {
   return (
     <Container maxW="100%">
       <Box
+        ml="-4"
         width="100vw"
         height="100%"
         overflow="scroll"
-        bgImage="url('/bg.png')"
+        bgImage="url('/bg2.png')"
         bgSize="cover"
-        bgPosition="center"
+        bgPosition="stretch"
       >
 
-        <Text
-          fontSize="4xl"
-          fontWeight="bold"
-          textTransform="uppercase"
-          textAlign="center"
-          letterSpacing="wide"
-          color="white"
-          mt={10}
-          mb={-10}
+        <Image
+          src="logo.png"
+          width="20%"
+          position="absolute"
         >
-          Music Notes
-        </Text>
+        </Image>
+
         
         <VStack
         width="100%"
@@ -158,6 +158,7 @@ export default function Home() {
                 </Text>
               ))}
             </VStack>
+<<<<<<< HEAD
           </VStack>
           <VStack spacing={3} alignItems="center">
             <Input onChange={(event) => setProjectName(event.target.value)} width="60%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
@@ -167,9 +168,24 @@ export default function Home() {
         </HStack>
         <Button isDisabled={!(fileList.length > 0 && description != "" && theme != "" && projectname != "")} onClick={handleUpload}>Generate Study Playlist</Button>
       </VStack>
+=======
+          </HStack>
+          <Button
+            mt={-5}
+            mb={10}
+            isDisabled={isLoading || !(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
+            onClick={handleUpload}>
+            
+            {!isLoading && `Generate Study Playlist`}
+
+            {isLoading && <Spinner/>}
+
+            </Button>
+        </VStack>
+>>>>>>> b42efd41f22f0d88cdf877b94e8092e44508e760
         
       </Box>
-      <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
+      <SimpleGrid minChildWidth='250px' spacing='40px' mx='10px' width="70%" margin="auto">
         {
           userData?.projects.map((project: Project, index: number) => (
             <FileCard key={index} project={project} onClick={ () => {
