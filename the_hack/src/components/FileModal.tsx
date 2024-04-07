@@ -7,6 +7,12 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionIcon,
+  AccordionPanel,
+  Box,
 } from "@chakra-ui/react";
 
 interface FileModalProps {
@@ -24,12 +30,13 @@ export const FileModal = ({
     <>
       <Modal onClose={onClose} size='xl' isOpen={isOpen}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+        <ModalContent  width="100rem">
+          <ModalHeader>
+            Modal Title
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            Modal text
-            {/* <Accordion allowToggle>
+            <Accordion allowToggle>
               <AccordionItem>
                 <h2>
                   <AccordionButton>
@@ -63,7 +70,7 @@ export const FileModal = ({
                   commodo consequat.
                 </AccordionPanel>
               </AccordionItem>
-            </Accordion> */}
+            </Accordion>
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>
