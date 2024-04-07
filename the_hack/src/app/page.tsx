@@ -3,11 +3,7 @@ import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
-<<<<<<< HEAD
-import { Text, Box, Button, VStack, HStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Spinner } from "@chakra-ui/react";
-=======
 import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Image, Spinner } from "@chakra-ui/react";
->>>>>>> b42efd41f22f0d88cdf877b94e8092e44508e760
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
@@ -158,18 +154,8 @@ export default function Home() {
                 </Text>
               ))}
             </VStack>
-<<<<<<< HEAD
-          </VStack>
-          <VStack spacing={3} alignItems="center">
-            <Input onChange={(event) => setProjectName(event.target.value)} width="60%" background="white" mt={2} placeholder="Topic?" value={projectname}></Input>
-            <Input onChange={(event) => setDescription(event.target.value)} width="60%" background="white" placeholder="Description?" value={description}/>
-            <Input onChange={(event) => setTheme(event.target.value)} width="60%" background="white" placeholder="Music style?" value={theme}></Input>
           </VStack>
         </HStack>
-        <Button isDisabled={!(fileList.length > 0 && description != "" && theme != "" && projectname != "")} onClick={handleUpload}>Generate Study Playlist</Button>
-      </VStack>
-=======
-          </HStack>
           <Button
             mt={-5}
             mb={10}
@@ -182,8 +168,6 @@ export default function Home() {
 
             </Button>
         </VStack>
->>>>>>> b42efd41f22f0d88cdf877b94e8092e44508e760
-        
       </Box>
       <SimpleGrid minChildWidth='250px' spacing='40px' mx='10px' width="70%" margin="auto">
         {
