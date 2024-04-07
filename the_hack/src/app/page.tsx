@@ -3,7 +3,7 @@ import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
 import { GetProp, UploadProps } from "antd";
-import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Spinner } from "@chakra-ui/react";
+import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Image, Spinner } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
@@ -121,26 +121,22 @@ export default function Home() {
   return (
     <Container maxW="100%">
       <Box
+        ml="-4"
         width="100vw"
         height="100%"
         overflow="scroll"
-        bgImage="url('/bg.png')"
+        bgImage="url('/bg2.png')"
         bgSize="cover"
-        bgPosition="center"
+        bgPosition="stretch"
       >
 
-        <Text
-          fontSize="4xl"
-          fontWeight="bold"
-          textTransform="uppercase"
-          textAlign="center"
-          letterSpacing="wide"
-          color="white"
-          mt={10}
-          mb={-10}
+        <Image
+          src="logo.png"
+          width="20%"
+          position="absolute"
         >
-          Music Notes
-        </Text>
+        </Image>
+
         
         <VStack width="100%" alignItems="center" justifyContent="center" spacing={10} mt={20}>
           <HStack width="100%" alignItems="top" justifyContent="center" spacing={10}>
@@ -162,7 +158,7 @@ export default function Home() {
           </HStack>
           <Button
             mt={-5}
-            mb={5}
+            mb={10}
             isDisabled={isLoading || !(fileList.length > 0 && description != "" && theme != "" && projectname != "")}
             onClick={handleUpload}>
             
@@ -174,7 +170,7 @@ export default function Home() {
         </VStack>
         
       </Box>
-      <SimpleGrid minChildWidth='300px' spacing='40px' m='10px'>
+      <SimpleGrid minChildWidth='250px' spacing='40px' mx='10px' width="70%" margin="auto">
         {
           userData?.projects.map((project: Project, index: number) => (
             <FileCard key={index} project={project} onClick={ () => {
