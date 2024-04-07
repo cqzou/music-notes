@@ -173,7 +173,7 @@ async def create_upload_files(background_tasks: BackgroundTasks, file: UploadFil
             topicnames.append(topicname)
             audio_urls.append("")
             statuses.append(status)
-        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=audio_urls, statuses=statuses)
+        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=audio_urls, statuses=statuses, image_url="")
         return {"data": response["data"]}
 
     except Exception as e:

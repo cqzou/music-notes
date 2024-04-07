@@ -2,8 +2,8 @@
 import FileUpload from "@/components/FileUploader";
 import { useEffect, useState } from "react";
 import '@fontsource-variable/urbanist';
-import { GetProp, UploadProps } from "antd";
-import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Image, Spinner } from "@chakra-ui/react";
+import { Divider, GetProp, UploadProps } from "antd";
+import { Text, Box, Button, HStack, VStack, Container, SimpleGrid, useDisclosure, Textarea, Input, Image, Spinner, Heading } from "@chakra-ui/react";
 import { Flex } from '@chakra-ui/react';
 import { FileCard } from "@/components/FileCard";
 import { ProcessingStatus, UserData, Topic, Project } from "@/components/consts";
