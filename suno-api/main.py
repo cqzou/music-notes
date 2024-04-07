@@ -1,18 +1,20 @@
 # -*- coding:utf-8 -*-
 
 import json
+import time
 
-from fastapi import Depends, FastAPI, HTTPException, Request, status, File, UploadFile
+from fastapi import Depends, FastAPI, Form, HTTPException, Request, status, File, UploadFile, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 import PyPDF2
 import schemas
 import io
 from deps import get_token
-from utils import generate_lyrics, generate_music, get_feed, get_lyrics, generate_music_from_text, save_song
+from utils import generate_id, generate_lyrics, generate_music, get_feed, get_lyrics, generate_music_from_text, save_song
 from topic_segment import TopicSegmenter
 from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
+from db_utils import create_empty_project, delete_project, update_audio_url, update_audio_urls, update_project_completion_status
 from dotenv import load_dotenv
 import os
 import certifi
@@ -41,6 +43,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# async def __background_generate_songs(client, userid, segmented_data, theme, title, token, projectid):
+#     print(f"aids: {aids}")
+#     # for topicname, aid in aids:
+#     #     try:
+#     #         audio_url, metadata, image_url = await save_song(aid, token)
+#     #     except TimeoutError as err: 
+#     #         print("timeout error sadpag")
+#     #         audio_url = f"https://cdn1.suno.ai/{aid}.mp3"
+#     #         image_url = f"https://cdn1.suno.ai/image_{aid}.png"
+
+#         # response = await update_audio_url(client, userid, projectid, topicname, audio_url)
+#     response = await update_audio_url(client, userid, projectid, topicname, audio_url, aid)
+#     response = await update_project_completion_status(client, userid, projectid, image_url)
+#     print(f"response: {response}")
 
 @app.get("/")
 async def get_root():
@@ -129,7 +146,7 @@ def extract_text_from_pdf(pdf_bytes: bytes) -> str:
 
 #Read bytes from fileUpload, parse them and return text string 
 @app.post("/uploadfiles/")
-async def create_upload_files(file: UploadFile, token: str = Depends(get_token)):
+async def create_upload_files(background_tasks: BackgroundTasks, file: UploadFile = File(), userid: str = Form(), description: str = Form(), theme: str = Form(), projectname: str = Form(), token: str = Depends(get_token)):
     try:
         pdf_bytes = await file.read()  # Read file as binary data
         text = extract_text_from_pdf(pdf_bytes)  # Extract text from PDF
@@ -137,18 +154,35 @@ async def create_upload_files(file: UploadFile, token: str = Depends(get_token))
         segmenter = TopicSegmenter()
         segmented_data = segmenter.segment_topic(text)
         #segmented_data = None
-        print(segmented_data[0]["lyrics"])
-        lyrics = segmented_data[0]["lyrics"]
-        aid1, aid2 = await generate_music_from_text(lyrics, theme="electronic", title="bowowoow", token=token)
-        print(aid1, aid2)
-        audio_url, metadata = await save_song(aid1, token)
+        print(f"segmented_data:{segmented_data}")
+        projectid = generate_id()
+        topics = [schemas.Topic(topicname=data["topicname"], lyrics=data["lyrics"], mp3="", status="loading").model_dump() for data in segmented_data]
+        new_empty_project = schemas.Project(projectid=projectid, processingstatus="generating", projectname=projectname, description=description, thumbnail='', topics=topics, creationdate="4/7/24")
+        response = await create_empty_project(client, userid, new_empty_project)
+        print(f"response to create_empty_proj: {response}")
+        #return {"segmented_data": segmented_data, "audio_url": audio_url, "metadata": metadata}
+        #background_tasks.add_task(__background_generate_songs, client, userid, segmented_data[0:3], theme, projectname, token, projectid)
+        aids, topicnames, audio_urls, statuses = [], [], [], []
+        for data in segmented_data:
+            print(f"data: {data}")
+            print(f"lyrics: {data['lyrics']}")
+            lyrics = data["lyrics"]
+            topicname = data["topicname"]
+            aid1, aid2, status = await generate_music_from_text(lyrics, theme=theme, title=topicname, token=token)
+            aids.append(aid1)
+            topicnames.append(topicname)
+            audio_urls.append("")
+            statuses.append(status)
+        response = await update_audio_urls(client, userid, projectid, topicnames, audio_ids=aids, new_audio_urls=audio_urls, statuses=statuses)
+        return {"data": response["data"]}
 
-        return {"segmented_data": segmented_data, "audio_url": audio_url, "metadata": metadata}
-    except Exception:
+    except Exception as e:
+        print(e)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="idk man"
         )
+
 
 
 # Get user data
@@ -157,8 +191,48 @@ async def fetch_user_feed(userid: str):
     try:
         collection = client['thelasthackbackend']['users']
         result = collection.find_one({'userid':userid}, {'_id': 0})
-        print('result is', type(result))
-        
+        result["projects"] = result["projects"][::-1]
+        return result
+    except Exception as e:
+        raise HTTPException(
+            detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+# destroy a project
+@app.get("/delete_project/{userid}/{projectid}")
+async def lebron(userid: str, projectid: str):
+    try:
+        result = await delete_project(client, userid, projectid)
+        return result
+    except Exception as e:
+        raise HTTPException(
+            detail=str(e), status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+# Get user data
+@app.get("/lebronhames/{userid}")
+async def lebronhames(userid: str):
+    try:
+        project = {
+            "projectname": "Joe mama",
+            "processingstatus": "complete",
+            "projectid": "beeeeeeeeeeep",
+            "description": "deez nuts",
+            "thumbnail": "https://thumbs.dreamstime.com/b/cute-french-woman-striped-shirt-beret-funny-drawing-frenchwoman-typical-european-character-flag-cartoon-illustration-253980742.jpg",
+            "topics": [
+                {
+                    "topicname": "balls in the balls",
+                    "lyrics": "pee is stored in the balls",
+                    "mp3": "https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav",
+                },
+                {
+                    "topicname": "balls in the balls",
+                    "lyrics": "pee is stored in the balls",
+                    "mp3": "https://www2.cs.uic.edu/~i101/SoundFiles/BabyElephantWalk60.wav",
+                }
+            ]
+        }
+        result = await create_empty_project(client, userid, project)
         return result
     except Exception as e:
         raise HTTPException(

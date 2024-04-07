@@ -43,7 +43,7 @@ class TopicSegmenter:
 		with open('output.json', 'w') as file:
 			json.dump(data, file, indent=4)
 
-		return [{"topic": key, "lyrics": data[key]} for key in data]
+		return [{"topicname": key, "lyrics": data[key]} for key in data]
 
 		# try:
 		# 	topics_dict = json.loads(response.choices[0].message.content[response.choices[0].message.content.find('{'):response.choices[0].message.content.rfind('}')+1])

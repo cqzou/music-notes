@@ -48,8 +48,12 @@ export default function FileUpload({ setFileList, fileList }: FileUploadProps) {
   };
 
   const uploadButton = (
-    <Box boxSize="10rem">
-      <Button colorScheme='teal' border="2px solid" variant="outline" height="100%" width="100%" justifyContent="center" display="block">
+    <Box
+      boxSize="10rem"
+      bg="white"
+      borderRadius="10"
+    >
+      <Button colorScheme='teal' border="4px solid" variant="outline" height="100%" width="100%" justifyContent="center" display="block">
         <Box fontFamily="Urbanist" width="100%" fontSize="xl">
           +
         </Box>
